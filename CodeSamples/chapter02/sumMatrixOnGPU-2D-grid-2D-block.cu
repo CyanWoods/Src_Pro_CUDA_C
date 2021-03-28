@@ -140,9 +140,8 @@ int main(int argc, char **argv)
     sumMatrixOnGPU2D<<<grid, block>>>(d_MatA, d_MatB, d_MatC, nx, ny);
     CHECK(cudaDeviceSynchronize());
     iElaps = seconds() - iStart;
-    printf("sumMatrixOnGPU2D <<<(%d,%d), (%d,%d)>>> elapsed %f sec\n", grid.x,
-           grid.y,
-           block.x, block.y, iElaps);
+    printf("sumMatrixOnGPU2D <<<(%d,%d), (%d,%d)>>> elapsed %f sec\n", 
+                        grid.x,grid.y,block.x, block.y, iElaps);
     // check kernel error
     CHECK(cudaGetLastError());
 
