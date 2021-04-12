@@ -14,7 +14,7 @@
  * cross-device reference is performed (as is required with zero copy and UVA).
  */
 
-void initialData(float *ip, const int size)
+void initialData(float *ip, const int size) //生成size个0到2.56之间的随机数
 {
     int i;
 
