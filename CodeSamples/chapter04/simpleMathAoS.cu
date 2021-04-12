@@ -12,19 +12,19 @@
 
 #define LEN 1<<22
 
-struct innerStruct
+struct innerStruct  //结构体数组（AoS）
 {
     float x;
     float y;
 };
 
-struct innerArray
+struct innerArray   //数组结构体（SoA）
 {
     float x[LEN];
     float y[LEN];
 };
 
-void initialInnerStruct(innerStruct *ip,  int size)
+void initialInnerStruct(innerStruct *ip,  int size) //对数组结构体进行初始化操作（2.56-0）
 {
     for (int i = 0; i < size; i++)
     {
@@ -35,7 +35,7 @@ void initialInnerStruct(innerStruct *ip,  int size)
     return;
 }
 
-void testInnerStructHost(innerStruct *A, innerStruct *C, const int n)
+void testInnerStructHost(innerStruct *A, innerStruct *C, const int n)   //对a进行变化，放到c中。
 {
     for (int idx = 0; idx < n; idx++)
     {
@@ -46,7 +46,7 @@ void testInnerStructHost(innerStruct *A, innerStruct *C, const int n)
     return;
 }
 
-void checkInnerStruct(innerStruct *hostRef, innerStruct *gpuRef, const int N)
+void checkInnerStruct(innerStruct *hostRef, innerStruct *gpuRef, const int N)   //监测数据的一致性
 {
     double epsilon = 1.0E-8;
     bool match = 1;
@@ -70,11 +70,13 @@ void checkInnerStruct(innerStruct *hostRef, innerStruct *gpuRef, const int N)
         }
     }
 
-    if (!match)  printf("Arrays do not match.\n\n");
+    if (!match)  printf("Arrays do not match.\n\n");    //如果布尔类型match的反（也就是！match）打印出。
 }
 
-__global__ void testInnerStruct(innerStruct *data, innerStruct * result,
-                                const int n)
+
+//核函数内容
+
+__global__ void testInnerStruct(innerStruct *data, innerStruct * result, const int n)   //修改结构体数组的值
 {
     unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -87,7 +89,7 @@ __global__ void testInnerStruct(innerStruct *data, innerStruct * result,
     }
 }
 
-__global__ void warmup(innerStruct *data, innerStruct * result, const int n)
+__global__ void warmup(innerStruct *data, innerStruct * result, const int n)    //再来一遍，就是热身
 {
     unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -106,8 +108,7 @@ int main(int argc, char **argv)
     int dev = 0;
     cudaDeviceProp deviceProp;
     CHECK(cudaGetDeviceProperties(&deviceProp, dev));
-    printf("%s test struct of array at ", argv[0]);
-    printf("device %d: %s \n", dev, deviceProp.name);
+    printf("%s test struct of array at device %d: %s \n", argv[0], dev, deviceProp.name);
     CHECK(cudaSetDevice(dev));
 
     // allocate host memory
