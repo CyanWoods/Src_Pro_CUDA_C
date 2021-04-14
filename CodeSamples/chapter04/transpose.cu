@@ -307,7 +307,7 @@ int main(int argc, char **argv)
 
     case 6:
         kernel = &transposeDiagonalRow;
-        kernelName = "DiagonalRow   ";
+        kernelName = "sssRow   ";
         break;
 
     case 7:
