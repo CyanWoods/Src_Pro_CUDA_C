@@ -98,19 +98,6 @@ __global__ void naiveGmem(float *out, float *in, const int nrows, const int ncol
     }
 }
 
-__global__ void naiveGmem1(float *out, float *in, const int nrows, const int ncols)
-{
-    // matrix coordinate (ix,iy)
-    unsigned int col = blockIdx.y * blockDim.y + threadIdx.y;
-    unsigned int row = blockIdx.x * blockDim.x + threadIdx.x;
-
-    // transpose with boundary test
-    if (row < nrows && col < ncols)
-    {
-        out[INDEX(row, col, ncols)] = in[INDEX(col, row, nrows)];
-    }
-}
-
 __global__ void naiveGmemUnroll(float *out, float *in, const int nrows,
                                 const int ncols)
 {
@@ -518,26 +505,6 @@ int main(int argc, char **argv)
     ibnd = 2 * ncells * sizeof(float) / (1024.0 * 1024.0 * 1024.0) / iElaps;
     ibnd = 2 * ncells * sizeof(float) / 1e9 / iElaps;
     printf("naiveGmem elapsed %f sec <<< grid (%d,%d) block (%d,%d)>>> "
-           "effective bandwidth %f GB\n", iElaps, grid.x, grid.y, block.x,
-           block.y, ibnd);
-    
-    // tranpose gmem
-    CHECK(cudaMemset(d_C, 0, nBytes));
-    memset(gpuRef, 0, nBytes);
-
-    iStart = seconds();
-    naiveGmem1<<<grid, block>>>(d_C, d_A, nrows, ncols);
-    CHECK(cudaDeviceSynchronize());
-    iElaps = seconds() - iStart;
-
-    CHECK(cudaMemcpy(gpuRef, d_C, nBytes, cudaMemcpyDeviceToHost));
-
-    if(iprint) printData(gpuRef, ncells);
-
-    checkResult(hostRef, gpuRef, ncols, nrows);
-    ibnd = 2 * ncells * sizeof(float) / (1024.0 * 1024.0 * 1024.0) / iElaps;
-    ibnd = 2 * ncells * sizeof(float) / 1e9 / iElaps;
-    printf("naiveGmem1 elapsed %f sec <<< grid (%d,%d) block (%d,%d)>>> "
            "effective bandwidth %f GB\n", iElaps, grid.x, grid.y, block.x,
            block.y, ibnd);
 
