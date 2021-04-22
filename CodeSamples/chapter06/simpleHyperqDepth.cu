@@ -156,6 +156,7 @@ int main(int argc, char **argv)
         kernel_1<<<grid, block, 0, streams[i]>>>();
         kernel_2<<<grid, block, 0, streams[i]>>>();
         kernel_3<<<grid, block, 0, streams[i]>>>();
+        kernel_4<<<grid, block, 0, streams[i]>>>();
         
     }
 
