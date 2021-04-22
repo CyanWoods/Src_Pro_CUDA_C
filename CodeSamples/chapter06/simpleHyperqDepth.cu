@@ -12,8 +12,8 @@
  * scheduling of these kernels simpler to visualize in the Visual Profiler.
  */
 
-#define N 300000
-#define NSTREAM 4
+#define N 3000000
+#define NSTREAM 6
 
 __global__ void kernel_1()
 {
@@ -54,6 +54,26 @@ __global__ void kernel_4()
         sum = sum + tan(0.1) * tan(0.1);
     }
 }
+__global__ void kernel_5()
+{
+    double sum = 0.0;
+
+    for(int i = 0; i < N; i++)
+    {
+        sum = sum + tan(0.1) * tan(0.1);
+    }
+}
+__global__ void kernel_6()
+{
+    double sum = 0.0;
+
+    for(int i = 0; i < N; i++)
+    {
+        sum = sum + tan(0.1) * tan(0.1);
+    }
+}
+
+
 
 int main(int argc, char **argv)
 {
@@ -136,7 +156,7 @@ int main(int argc, char **argv)
         kernel_1<<<grid, block, 0, streams[i]>>>();
         kernel_2<<<grid, block, 0, streams[i]>>>();
         kernel_3<<<grid, block, 0, streams[i]>>>();
-        kernel_4<<<grid, block, 0, streams[i]>>>();
+        
     }
 
     // record stop event
