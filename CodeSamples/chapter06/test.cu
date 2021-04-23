@@ -3,6 +3,7 @@
 #include <cuda_runtime.h>
 #include <stdlib.h>
 
+#define cudaStreamNonBlocking 0x01
 #define N 3000000         //循环三万次计算
 #define NSTREAM 4       //设定最大流的数量为4
 
@@ -99,7 +100,7 @@ int main(int argc, char **argv)
 
     for (int i = 0 ; i < n_streams ; i++)
     {
-        CHECK(cudaStreamCreate(&(streams[i])));
+        CHECK(cudaStreamCreateWithFlags ( &streams[i],cudaStreamNonBlocking));
     }
 
     // run kernel with more threads

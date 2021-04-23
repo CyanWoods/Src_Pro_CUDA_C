@@ -158,7 +158,7 @@ int main(int argc, char **argv)
 
     // calculate elapsed time
     CHECK(cudaEventElapsedTime(&elapsed_time, start, stop));
-    printf("Measured time for parallel execution = %.3fs\n",
+    printf("Measured time for parallel execution = %fs\n",
            elapsed_time / 1000.0f);
 
     // release all stream
